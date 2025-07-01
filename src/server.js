@@ -2,13 +2,15 @@ import express from "express";
 import DotenvFlow from "dotenv-flow";
 import bodyParser from "body-parser";
 import geminiRouter from "./routes/gemini_router.js"
+import cors from "cors"
 
 DotenvFlow.config();
-
-const app = express();
 const port = process.env.PORT || 3042;
 
+const app = express();
+
 app.use(bodyParser.json());
+app.use(cors());
 
 app.use('/api/gemini', geminiRouter);
 
@@ -18,6 +20,6 @@ app.get('/heartbeat', (req, res) => {
   res.status(200).json({now: date});
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, () => {3
+  console.log(`\nServer is running on http://localhost:${port}`);
 });

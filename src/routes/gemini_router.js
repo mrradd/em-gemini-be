@@ -22,6 +22,7 @@ geminiRouter.post('/chat', async (req, res) => {
     if(!req?.body?.prompt) {
       throw new Error("No `prompt` provided.")
     }
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: req.body.prompt,
@@ -31,7 +32,6 @@ geminiRouter.post('/chat', async (req, res) => {
         },
       },
     });
-    console.log(response.text);
 
     res.status(201).json({
       text: response.text,

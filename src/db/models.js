@@ -4,6 +4,7 @@ export class ChatDataModel {
     this.chat_thread_id = ""; //UUID
     this.prompt = ""; //string
     this.response = ""; //string
+    this.blob = null; //any. Initing to null; I don't know what a blob looks like when returned from the db. MAX 1GB.
     this.prompt_tokens = 0; //number
     this.response_tokens = 0; //number
     this.thinking_tokens = 0; //number

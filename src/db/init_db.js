@@ -7,20 +7,21 @@ export const initDb = () => {
 
     TheDB.exec(`CREATE TABLE IF NOT EXISTS chat_threads(
       id TEXT PRIMARY KEY,
-      title TEXT,
-      created_date TEXT,
+      title TEXT NOT NULL,
+      created_date TEXT NOT NULL,
       updated_date TEXT,
     );`);
 
     TheDB.exec(`CREATE TABLE IF NOT EXISTS chat_data(
       id TEXT PRIMARY KEY,
       chat_thread_id TEXT,
-      prompt TEXT,
-      response TEXT,
-      prompt_tokens INTEGER,
-      response_tokens INTEGER,
+      prompt TEXT NOT NULL,
+      response TEXT NOT NULL,
+      blob BLOB,
+      prompt_tokens INTEGER NOT NULL,
+      response_tokens INTEGER NOT NULL,
       thinking_tokens INTEGER,
-      created_date TEXT,
+      created_date TEXT NOT NULL,
       FOREIGN KEY(chat_thread_id) REFERENCES chat_threads(id)
     );`);
     TheDB.exec("COMMIT");
