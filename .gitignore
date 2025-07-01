@@ -1,0 +1,9 @@
+node_modules/**
+build/**
+dist/**
+.env.local
+*.db
+/.vscode
+/gpt_responses
+em.pm2.config.js
+em.pm2.config.json
