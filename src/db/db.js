@@ -2,20 +2,20 @@ import sqlite from "node:sqlite";
 import crypto from "crypto";
 import { ChatDataModel } from "./models.js";
 
-// export const TheDB = new sqlite.DatabaseSync("electric_meatball.db");
+export const TheDB = new sqlite.DatabaseSync("emg.db");
 
-// export class ChatDataService {
-//   static getAllChats () {
-//     try {
-//       const query = TheDB.prepare("SELECT * FROM chat_data");
-//       const dbResult = query.all();
-//       return dbResult;
-//     }
-//     catch (error) {
-//       console.log(`ERROR: getAllMessages: ${error.message}`);
-//       return null;
-//     }
-//   }
+export class ChatDataService {
+  static getAllChats () {
+    try {
+      const query = TheDB.prepare("SELECT * FROM chat_data");
+      const dbResult = query.all();
+      return dbResult;
+    }
+    catch (error) {
+      console.log(`ERROR: getAllMessages: ${error.message}`);
+      return null;
+    }
+  }
 
 //   static saveChatData({
 //     response_id,
@@ -72,4 +72,4 @@ import { ChatDataModel } from "./models.js";
 //       return null;
 //     }
 //   }
-// }
+}

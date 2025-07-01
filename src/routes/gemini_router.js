@@ -8,15 +8,14 @@ const ai = new GoogleGenAI({});
 const geminiRouter = Router();
 
 /**
-//POST /api/gemini/chat
+POST /api/gemini/chat
 Requests a one-off chat.
 
-req:
+req.body:
 {
   prompt: string //User's prompt for the AI request.
 }
 **/
-
 geminiRouter.post('/chat', async (req, res) => {
   try {
 

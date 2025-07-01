@@ -6,6 +6,7 @@
       "env_local": {
         "GEMINI_MODEL": "gemini-2.5-flash",
         "GEMINI_API_KEY": "keys-to-the-lamborghini",
+        "IMAGE_MODEL": "imagen-3.0-generate-002",
         "PORT": "3042"
       }
     }
