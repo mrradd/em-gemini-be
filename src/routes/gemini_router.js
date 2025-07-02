@@ -1,16 +1,12 @@
 import { Router } from "express";
-import DotenvFlow from "dotenv-flow";
-import { GoogleGenAI } from "@google/genai";
+import ChatBusinessLogic from "../business_logic/ChatBusinessLogic.js";
 
-DotenvFlow.config();
-
-const ai = new GoogleGenAI({});
 const geminiRouter = Router();
 
 /**
 POST /api/gemini/chat
 Requests a one-off chat.
-
+---
 req.body:
 {
   prompt: string //User's prompt for the AI request.
@@ -18,24 +14,14 @@ req.body:
 **/
 geminiRouter.post('/chat', async (req, res) => {
   try {
-
     if(!req?.body?.prompt) {
       throw new Error("No `prompt` provided.")
     }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: req.body.prompt,
-      config: {
-        thinkingConfig: {
-          thinkingBudget: 0, // Disables thinking
-        },
-      },
-    });
+    const response = await ChatBusinessLogic.doChatRequest(req?.body?.prompt);
 
     res.status(201).json({
       text: response.text,
-      usageMetadata: response.usageMetadata,
     });
   }
   catch (error){

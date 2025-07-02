@@ -20,3 +20,11 @@ export class ChatThreadModel {
     this.updated_date = ""; //string
   }
 }
+
+export class Migrations {
+  constructor() {
+    this.id = "" //UUID
+    this.date = ""; //string
+    this.version_number = 0; //number
+  }
+}

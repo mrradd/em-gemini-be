@@ -9,7 +9,7 @@ export const initDb = () => {
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
       created_date TEXT NOT NULL,
-      updated_date TEXT,
+      updated_date TEXT
     );`);
 
     TheDB.exec(`CREATE TABLE IF NOT EXISTS chat_data(
@@ -24,6 +24,13 @@ export const initDb = () => {
       created_date TEXT NOT NULL,
       FOREIGN KEY(chat_thread_id) REFERENCES chat_threads(id)
     );`);
+
+    TheDB.exec(`CREATE TABLE IF NOT EXISTS migrations(
+      id TEXT PRIMARY KEY,
+      date TEXT NOT NULL,
+      version_number TEXT NOT NULL
+    );`);
+
     TheDB.exec("COMMIT");
     console.log("Finished initializing the DB.");
   }
