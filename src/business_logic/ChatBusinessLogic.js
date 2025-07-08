@@ -56,8 +56,7 @@ export default class ChatBusinessLogic {
     }
   }
 
-  static async getAllChats() {
-    
-    return {};
+  static getAllChatThreads() {
+    return ChatDataService.getAllChatThreads();
   }
 }

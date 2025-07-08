@@ -18,6 +18,7 @@ export class ChatThreadModel {
     this.title = ""; //string
     this.created_date = ""; //string
     this.updated_date = ""; //string
+    this.chats = []; //ChatDataModel[]
   }
 }
 

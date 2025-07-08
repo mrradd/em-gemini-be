@@ -3,28 +3,6 @@ import ChatBusinessLogic from "../business_logic/ChatBusinessLogic.js";
 
 const geminiRouter = Router();
 
-
-/**
-POST /api/gemini/chat/thread/new
-Creates a new Chat Thread.
----
-req.body: none
-**/
-geminiRouter.post('/chat/thread/new', async (req, res) => {
-  try {
-
-    const response = await ChatBusinessLogic.createNewChatThread();
-
-    res.status(201).json({
-      chatThread: response,
-    });
-  }
-  catch (error){
-    console.log(`ERROR: POST /api/gemini/chat/thread/new: ${error.message}`);
-    res.sendStatus(500);
-  }
-});
-
 /**
 POST /api/gemini/chat
 Requests a one-off chat.
@@ -69,5 +47,50 @@ geminiRouter.get('/chat/all', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+/**
+POST /api/gemini/chat/thread/new
+Creates a new Chat Thread.
+---
+req.body: none
+**/
+geminiRouter.post('/chat/thread/new', async (req, res) => {
+  try {
+
+    const response = await ChatBusinessLogic.createNewChatThread();
+
+    res.status(201).json({
+      chatThread: response,
+    });
+  }
+  catch (error){
+    console.log(`ERROR: POST /api/gemini/chat/thread/new: ${error.message}`);
+    res.sendStatus(500);
+  }
+});
+
+//TODO CH  GET ALL THREADS
+/**
+GET /api/gemini/chat/thread/all
+Gets all Chat Threads.
+**/
+geminiRouter.get('/chat/thread/all', async (req, res) => {
+  try {
+    const response = await ChatBusinessLogic.getAllChatThreads();
+
+    res.status(200).json({
+      threads: response,
+    });
+  }
+  catch (error){
+    console.log(`ERROR: POST /api/gemini/chat/thread/new: ${error.message}`);
+    res.sendStatus(500);
+  }
+});
+
+
+//TODO CH  GET ALL CHATS FOR A THREAD
+//TODO CH  DELETE A THREAD
+//TODO CH  EDIT A THREAD'S NAME
 
 export default geminiRouter;

@@ -12,7 +12,19 @@ export class ChatDataService {
       return dbResult;
     }
     catch (error) {
-      console.log(`ERROR: getAllMessages: ${error.message}`);
+      console.log(`ERROR: getAllChats: ${error.message}`);
+      return null;
+    }
+  }
+
+  static getAllChatThreads () {
+    try {
+      const query = TheDB.prepare("SELECT * FROM chat_threads");
+      const dbResult = query.all();
+      return dbResult;
+    }
+    catch (error) {
+      console.log(`ERROR: getAllChatThreads: ${error.message}`);
       return null;
     }
   }
