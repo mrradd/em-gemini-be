@@ -31,11 +31,11 @@ export const initDb = () => {
       version_number TEXT NOT NULL
     );`);
 
-    TheDB.exec("COMMIT");
+    TheDB.exec("COMMIT;");
     console.log("Finished initializing the DB.");
   }
   catch (error) {
-    TheDB.exec("ROLLBACK");
+    TheDB.exec("ROLLBACK;");
     console.log(`ERROR initDb: ${error.message}`);
   }
   finally {

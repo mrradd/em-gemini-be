@@ -1,6 +1,6 @@
 import sqlite from "node:sqlite";
 import crypto from "crypto";
-import { ChatDataModel } from "./models.js";
+import { ChatDataModel, ChatThreadModel } from "./models.js";
 
 export const TheDB = new sqlite.DatabaseSync("emg.db");
 
@@ -17,50 +17,46 @@ export class ChatDataService {
     }
   }
 
-  static saveChatData({
-    response_id,
-    chat_id,
+  static saveNewChatData({
+    chat_thread_id,
     prompt,
     response,
+    blob,
     prompt_tokens,
-    completion_tokens,
-    reasoning_tokens,
+    response_tokens,
+    thinking_tokens,
   }) {
     try {
       TheDB.exec("BEGIN");
       const insertChatData = TheDB.prepare(`
-      INSERT INTO chat_data(id, response_id, chat_id, prompt, response, prompt_char_count,
-        response_char_count, prompt_tokens, completion_tokens, reasoning_tokens, date)
-      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`);
+      INSERT INTO chat_data(id, chat_thread_id, prompt, response, blob, prompt_tokens,
+        response_tokens, thinking_tokens, created_date)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);`);
 
       const date = new Date();
       let newChatObj = new ChatDataModel();
       newChatObj = {
         id: crypto.randomUUID(),
-        response_id: response_id,
-        chat_id: chat_id,
+        chat_thread_id: chat_thread_id,
         prompt: prompt,
         response: response,
-        prompt_char_count: prompt.length,
-        response_char_count: response.length,
+        blob: blob,
         prompt_tokens: prompt_tokens,
-        completion_tokens: completion_tokens,
-        reasoning_tokens: reasoning_tokens,
-        date: `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
+        response_tokens: response_tokens,
+        thinking_tokens: thinking_tokens,
+        created_date: `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
       };
 
       insertChatData.run(
         newChatObj.id,
-        newChatObj.response_id,
-        newChatObj.chat_id,
+        newChatObj.chat_thread_id,
         newChatObj.prompt,
         newChatObj.response,
-        newChatObj.prompt_char_count,
-        newChatObj.response_char_count,
+        newChatObj.blob,
         newChatObj.prompt_tokens,
-        newChatObj.completion_tokens,
-        newChatObj.reasoning_tokens,
-        newChatObj.date,
+        newChatObj.response_tokens,
+        newChatObj.thinking_tokens,
+        newChatObj.created_date,
       );
 
       TheDB.exec("COMMIT;");
@@ -69,6 +65,39 @@ export class ChatDataService {
     catch (error) {
       TheDB.exec("ROLLBACK;");
       console.log(`ERROR: saveChatData: ${error.message}`);
+      return null;
+    }
+  }
+
+  static saveNewChatThreadData({
+    title,
+  }) {
+    try {
+      TheDB.exec("BEGIN");
+      const insertChatThread = TheDB.prepare(`
+      INSERT INTO chat_threads(id, title, created_date)
+      VALUES(?, ?, ?);`);
+
+      const date = new Date();
+      let newChatThread = new ChatThreadModel();
+      newChatThread = {
+        id: crypto.randomUUID(),
+        title: title,
+        created_date: `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
+      };
+
+      insertChatThread.run(
+        newChatThread.id,
+        newChatThread.title,
+        newChatThread.created_date,
+      );
+
+      TheDB.exec("COMMIT;");
+      return newChatThread;
+    }
+    catch (error) {
+      TheDB.exec("ROLLBACK;");
+      console.log(`ERROR: saveChatThreadData: ${error.message}`);
       return null;
     }
   }
