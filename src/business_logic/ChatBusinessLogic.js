@@ -22,9 +22,10 @@ export default class ChatBusinessLogic {
   /**
    * Performs a Gemini one off chat with the passed in prompt.
    * @param promptText - string - The prompt to send to Gemini.
+   * @param chatThreadId - string - UUID of the associated chat thread.
    * @returns A response with the response text and role of the chat.
    */
-  static async doChatRequest(promptText){
+  static async doChatRequest(promptText, chatThreadId){
     const response = await ai.models.generateContent({
       model: process.env.GEMINI_MODEL,
       contents: promptText,
@@ -38,17 +39,21 @@ export default class ChatBusinessLogic {
     if(response.text?.length > 0) {
       console.log(`${JSON.stringify(response)}`);
 
-      ChatDataService.saveChatData({
+      const newChat = ChatDataService.saveNewChatData({
+        chat_thread_id: chatThreadId,
         prompt: promptText,
         response: response.text,
-        response_tokens: response.usageMetadata?.candidatesTokenCount,
-        prompt_tokens: response.usageMetadata?.promptTokenCount,
-        thinking_tokens: response.usageMetadata?.thoughtsTokenCount
+        blob: "",
+        response_tokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+        prompt_tokens: response.usageMetadata?.promptTokenCount ?? 0,
+        thinking_tokens: response.usageMetadata?.thoughtsTokenCount ?? 0,
       });
 
       return {
-        role: response.candidates[0].role,
-        text: response.text,
+        id: newChat.id,
+        chatThreadId: newChat.chat_thread_id,
+        prompt: promptText,
+        response: response.text,
       };
     }
     else {
@@ -56,7 +61,20 @@ export default class ChatBusinessLogic {
     }
   }
 
+  /**
+   * Returns all chat threads in the database.
+   * @returns 
+   */
   static getAllChatThreads() {
     return ChatDataService.getAllChatThreads();
+  }
+
+  /**
+   * Returns a chat thread from the database by ID.
+   * @param chatThreadId - string - ID of the chat thread to find in the db.
+   * @returns 
+   */
+  static getChatThreadById(chatThreadId) {
+    return ChatDataService.getChatsForThreadById(chatThreadId);
   }
 }

@@ -17,7 +17,7 @@ export class ChatDataService {
     }
   }
 
-  static getAllChatThreads () {
+  static getAllChatThreads() {
     try {
       const query = TheDB.prepare("SELECT * FROM chat_threads");
       const dbResult = query.all();
@@ -26,6 +26,30 @@ export class ChatDataService {
     catch (error) {
       console.log(`ERROR: getAllChatThreads: ${error.message}`);
       return null;
+    }
+  }
+
+  static getChatsForThreadById(threadID) {
+    try{
+      const threadQuery = TheDB.prepare(`SELECT * FROM chat_threads WHERE id = '${threadID}'`);
+      const threadDbResult = threadQuery.all();
+
+      const chatQuery = TheDB.prepare(`SELECT * FROM chat_data WHERE chat_thread_id = '${threadID}';`);
+      const chatModelList = chatQuery.all();
+
+      const threadModel = new ChatThreadModel();
+      threadModel.id = threadDbResult[0].id;
+      threadModel.title = threadDbResult[0].title;
+      threadModel.created_date = threadDbResult[0].created_date;
+      threadModel.updated_date = threadDbResult[0].updated_date;
+      threadModel.chats = chatModelList;
+
+      console.log(threadModel)
+
+      return threadModel;
+    }
+    catch (error) {
+      console.log(`ERROR: getAllChatsInThread: ${error.message}`);
     }
   }
 
