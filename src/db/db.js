@@ -5,7 +5,27 @@ import { ChatDataModel, ChatThreadModel } from "./models.js";
 export const TheDB = new sqlite.DatabaseSync("emg.db");
 
 export class ChatDataService {
-  static getAllChats () {
+
+  static deleteChatThread(threadId) {
+    try {
+      const dataQuery = TheDB.prepare("DELETE FROM chat_data WHERE chat_thread_id = ?");
+      const threadQuery = TheDB.prepare("DELETE FROM chat_threads WHERE id = ?");
+      
+      TheDB.exec("BEGIN");
+      dataQuery.run(threadId);
+      threadQuery.run(threadId);
+      TheDB.exec("COMMIT;");
+
+      return true;
+    }
+    catch (error) {
+      TheDB.exec("ROLLBACK;");
+      console.log(`ERROR: deleteChatThread: ${error.message}`);
+      return false;
+    }
+  }
+
+  static getAllChats() {
     try {
       const query = TheDB.prepare("SELECT * FROM chat_data");
       const dbResult = query.all();
@@ -31,11 +51,11 @@ export class ChatDataService {
 
   static getChatsForThreadById(threadID) {
     try{
-      const threadQuery = TheDB.prepare(`SELECT * FROM chat_threads WHERE id = '${threadID}'`);
-      const threadDbResult = threadQuery.all();
+      const threadQuery = TheDB.prepare(`SELECT * FROM chat_threads WHERE id = ?;`);
+      const threadDbResult = threadQuery.all(threadID);
 
-      const chatQuery = TheDB.prepare(`SELECT * FROM chat_data WHERE chat_thread_id = '${threadID}';`);
-      const chatModelList = chatQuery.all();
+      const chatQuery = TheDB.prepare(`SELECT * FROM chat_data WHERE chat_thread_id = ?;`);
+      const chatModelList = chatQuery.all(threadID);
 
       const threadModel = new ChatThreadModel();
       threadModel.id = threadDbResult[0].id;
@@ -49,7 +69,7 @@ export class ChatDataService {
       return threadModel;
     }
     catch (error) {
-      console.log(`ERROR: getAllChatsInThread: ${error.message}`);
+      console.log(`ERROR: getChatsForThreadById: ${error.message}`);
     }
   }
 
@@ -133,7 +153,7 @@ export class ChatDataService {
     }
     catch (error) {
       TheDB.exec("ROLLBACK;");
-      console.log(`ERROR: saveChatThreadData: ${error.message}`);
+      console.log(`ERROR: saveNewChatThreadData: ${error.message}`);
       return null;
     }
   }

@@ -108,8 +108,24 @@ geminiRouter.get('/chat/thread/:id', async (req, res) => {
   }
 });
 
-//TODO CH  SEND CHAT ASSOCIATED WITH CHAT THREAD
-//TODO CH  DELETE A THREAD
+/**
+DELETE /api/gemini/chat/thread/:id
+Deletes a single Chat Thread by ID.
+**/
+geminiRouter.delete('/chat/thread/:id', async (req, res) => {
+  try {
+    const response = await ChatBusinessLogic.deleteChatThread(req.params.id);
+
+    res.status(200).json({
+      result: response,
+    });
+  }
+  catch (error){
+    console.log(`ERROR: DELETE /api/gemini/chat/thread/:id: ${error.message}`);
+    res.sendStatus(500);
+  }
+});
+
 //TODO CH  EDIT A THREAD'S NAME
 
 export default geminiRouter;
