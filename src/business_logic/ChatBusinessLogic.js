@@ -36,10 +36,21 @@ export default class ChatBusinessLogic {
    * @returns A response with the response text and role of the chat.
    */
   static async doChatRequest(promptText, chatThreadId){
+
+    let chatThread = ChatDataService.getChatsForThreadById(chatThreadId);
+    let chatStr = `"""`;
+
+    chatThread.chats.forEach((chat) => {
+      chatStr += `\nuser: ${chat.prompt}\nresponse: ${chat.response}`;
+    });
+
+    chatStr += `"""`;
+
     const response = await ai.models.generateContent({
       model: process.env.GEMINI_MODEL,
       contents: promptText,
       config: {
+        systemInstruction: `Consider the following in the response: ${chatStr}`,
         thinkingConfig: {
           thinkingBudget: 0, // Disables thinking which is expensive.
         },
