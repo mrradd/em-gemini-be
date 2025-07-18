@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ChatBusinessLogic from "../business_logic/ChatBusinessLogic.js";
 
-const geminiRouter = Router();
+const chatRouter = Router();
 
 /**
 POST /api/gemini/chat
@@ -12,7 +12,7 @@ req.body:
   prompt: string //User's prompt for the AI request.
 }
 **/
-geminiRouter.post('/chat', async (req, res) => {
+chatRouter.post('/chat', async (req, res) => {
   try {
     if(!req?.body?.prompt) {
       throw new Error("No `prompt` provided.");
@@ -37,7 +37,7 @@ geminiRouter.post('/chat', async (req, res) => {
 GET /api/gemini/all
 Requests all chats from the database.
 **/
-geminiRouter.get('/chat/all', async (req, res) => {
+chatRouter.get('/chat/all', async (req, res) => {
   try {
     const response = await ChatBusinessLogic.getAllChats();
 
@@ -57,7 +57,7 @@ Creates a new Chat Thread.
 ---
 req.body: none
 **/
-geminiRouter.post('/chat/thread/new', async (req, res) => {
+chatRouter.post('/chat/thread/new', async (req, res) => {
   try {
 
     const response = await ChatBusinessLogic.createNewChatThread();
@@ -76,7 +76,7 @@ geminiRouter.post('/chat/thread/new', async (req, res) => {
 GET /api/gemini/chat/thread/all
 Gets all Chat Threads.
 **/
-geminiRouter.get('/chat/thread/all', async (req, res) => {
+chatRouter.get('/chat/thread/all', async (req, res) => {
   try {
     const response = await ChatBusinessLogic.getAllChatThreads();
 
@@ -94,7 +94,7 @@ geminiRouter.get('/chat/thread/all', async (req, res) => {
 GET /api/gemini/chat/thread/:id
 Gets all chats in a thread.
 **/
-geminiRouter.get('/chat/thread/:id', async (req, res) => {
+chatRouter.get('/chat/thread/:id', async (req, res) => {
   try {
     const response = await ChatBusinessLogic.getChatThreadById(req.params.id);
 
@@ -112,7 +112,7 @@ geminiRouter.get('/chat/thread/:id', async (req, res) => {
 DELETE /api/gemini/chat/thread/:id
 Deletes a single Chat Thread by ID.
 **/
-geminiRouter.delete('/chat/thread/:id', async (req, res) => {
+chatRouter.delete('/chat/thread/:id', async (req, res) => {
   try {
     const response = await ChatBusinessLogic.deleteChatThread(req.params.id);
 
@@ -128,4 +128,4 @@ geminiRouter.delete('/chat/thread/:id', async (req, res) => {
 
 //TODO CH  EDIT A THREAD'S NAME
 
-export default geminiRouter;
+export default chatRouter;

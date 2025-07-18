@@ -58,8 +58,6 @@ export default class ChatBusinessLogic {
     });
 
     if(response.text?.length > 0) {
-      console.log(`${JSON.stringify(response)}`);
-
       const newChat = ChatDataService.saveNewChatData({
         chat_thread_id: chatThreadId,
         prompt: promptText,
