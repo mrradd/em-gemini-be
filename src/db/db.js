@@ -64,8 +64,6 @@ export class ChatDataService {
       threadModel.updated_date = threadDbResult[0].updated_date;
       threadModel.chats = chatModelList;
 
-      console.log(threadModel)
-
       return threadModel;
     }
     catch (error) {

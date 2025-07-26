@@ -58,8 +58,6 @@ export default class ChatBusinessLogic {
     });
 
     if(response.text?.length > 0) {
-      console.log(`${JSON.stringify(response)}`);
-
       const newChat = ChatDataService.saveNewChatData({
         chat_thread_id: chatThreadId,
         prompt: promptText,
@@ -80,6 +78,15 @@ export default class ChatBusinessLogic {
     else {
       throw new Error("No response text received.");
     }
+  }
+
+  /**
+   * Edits a chat thread with the passed in data.
+   * @param chatThreadId - string - UUID of the chat thread to edit.
+   * @param newName - string - New name for the chat thread.
+   */
+  static editChatThread({chatThreadId, newName}) {
+    console.log(`$$$ id: ${chatThreadId} | new name: ${newName}`);
   }
 
   /**

@@ -126,6 +126,4 @@ geminiRouter.delete('/chat/thread/:id', async (req, res) => {
   }
 });
 
-//TODO CH  EDIT A THREAD'S NAME
-
 export default geminiRouter;
