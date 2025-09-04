@@ -3,7 +3,6 @@ import DotenvFlow from "dotenv-flow";
 import bodyParser from "body-parser";
 import chatRouter from "./routes/chat_router.js"
 import cors from "cors"
-import chatRouter from "./routes/chat_router.js";
 
 DotenvFlow.config();
 const port = process.env.PORT || 3042;
