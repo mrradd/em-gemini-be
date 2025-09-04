@@ -105,4 +105,17 @@ export default class ChatBusinessLogic {
   static getChatThreadById(chatThreadId) {
     return ChatDataService.getChatsForThreadById(chatThreadId);
   }
+
+  /**
+   * Updates the chat thread meta data.
+   * @param newTitle - string - New title for the chat thread.
+   * @returns 
+   */
+  static updateChatThread({newTitle, chatThreadId}) {
+    if(chatThreadId?.length < 1) {
+      throw new Error("No ID given.");
+    }
+
+    return ChatDataService.updateChatThread(newTitle, chatThreadId)
+  }
 }

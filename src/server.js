@@ -1,7 +1,7 @@
 import express from "express";
 import DotenvFlow from "dotenv-flow";
 import bodyParser from "body-parser";
-import geminiRouter from "./routes/gemini_router.js"
+import chatRouter from "./routes/chat_router.js"
 import cors from "cors"
 import chatRouter from "./routes/chat_router.js";
 
@@ -13,8 +13,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/api/gemini', geminiRouter);
-app.use('/api/chat', chatRouter);
+//TODO CH  RENAME TO /chat
+app.use('/api/gemini', chatRouter);
 
 app.get('/heartbeat', (req, res) => {
   const date = new Date().toUTCString();
