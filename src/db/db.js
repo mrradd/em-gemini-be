@@ -1,6 +1,7 @@
 import sqlite from "node:sqlite";
 import crypto from "crypto";
 import { ChatDataModel, ChatThreadModel } from "./models.js";
+import { Utils } from "../utils/utils.js";
 
 export const TheDB = new sqlite.DatabaseSync("emg.db");
 
@@ -64,12 +65,11 @@ export class ChatDataService {
       threadModel.updated_date = threadDbResult[0].updated_date;
       threadModel.chats = chatModelList;
 
-      console.log(threadModel)
-
       return threadModel;
     }
     catch (error) {
       console.log(`ERROR: getChatsForThreadById: ${error.message}`);
+      return null;
     }
   }
 
@@ -100,7 +100,7 @@ export class ChatDataService {
         prompt_tokens: prompt_tokens,
         response_tokens: response_tokens,
         thinking_tokens: thinking_tokens,
-        created_date: `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
+        created_date: Utils.generateNowDateString(),
       };
 
       insertChatData.run(
@@ -134,12 +134,11 @@ export class ChatDataService {
       INSERT INTO chat_threads(id, title, created_date)
       VALUES(?, ?, ?);`);
 
-      const date = new Date();
       let newChatThread = new ChatThreadModel();
       newChatThread = {
         id: crypto.randomUUID(),
         title: title,
-        created_date: `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
+        created_date: Utils.generateNowDateString(),
       };
 
       insertChatThread.run(
@@ -154,6 +153,43 @@ export class ChatDataService {
     catch (error) {
       TheDB.exec("ROLLBACK;");
       console.log(`ERROR: saveNewChatThreadData: ${error.message}`);
+      return null;
+    }
+  }
+
+  static updateChatThread(newTitle, threadId) {
+    try {
+      let chatThreadModel = new ChatThreadModel();
+
+      TheDB.exec("BEGIN;");
+      if(newTitle?.length > 1) {
+        const updateChatThread = TheDB.prepare(`
+          UPDATE chat_threads 
+             SET title = ?,
+                 updated_date = ?
+           WHERE id = ?;`);
+
+        updateChatThread.run(
+          newTitle,
+          Utils.generateNowDateString(),
+          threadId,
+        );
+
+        const chatQuery = TheDB.prepare(`SELECT * FROM chat_threads WHERE id = ?;`);
+        const threadDbResult = chatQuery.all(threadId);
+
+        chatThreadModel.id = threadDbResult[0].id;
+        chatThreadModel.title = threadDbResult[0].title;
+        chatThreadModel.created_date = threadDbResult[0].created_date;
+        chatThreadModel.updated_date = threadDbResult[0].updated_date;
+      }
+
+      TheDB.exec("COMMIT;");
+      return chatThreadModel;
+    }
+    catch (error) {
+      TheDB.exec("ROLLBACK;");
+      console.log(`ERROR: updateChatThread: ${error.message}`);
       return null;
     }
   }

@@ -126,6 +126,24 @@ chatRouter.delete('/chat/thread/:id', async (req, res) => {
   }
 });
 
-//TODO CH  EDIT A THREAD'S NAME
+/**
+PATCH /api/gemini/chat/thread/edit
+Updates a Chat Thread's meta data.
+**/
+chatRouter.patch('/chat/thread/edit', async (req, res) => {
+  try {
+    if(req.body == null) {
+      throw new Error("No body given.")
+    }
+    
+    const response = await ChatBusinessLogic.updateChatThread(req.body);
+
+    res.status(200).json(response);
+  }
+  catch (error){
+    console.log(`ERROR: PATCH api/gemini/chat/thread/edit: ${error.message}`);
+    res.sendStatus(500);
+  }
+});
 
 export default chatRouter;
