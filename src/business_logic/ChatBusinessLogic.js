@@ -31,24 +31,24 @@ export default class ChatBusinessLogic {
 
   /**
    * Performs a Gemini one off chat with the passed in prompt.
-   * @param promptText - `string` - The prompt to send to Gemini.
+   * @param prompt - `string` - The prompt to send to Gemini.
    * @param chatThreadId - `string` - UUID of the associated chat thread.
    * @returns A response with the response text and role of the chat.
    */
-  static async doChatRequest({promptText, chatThreadId}){
+  static async doChatRequest({prompt, chatThreadId}){
 
     let chatThread = ChatDataService.getChatsForThreadById(chatThreadId);
     let chatStr = `"""`;
 
     chatThread.chats.forEach((chat) => {
-      chatStr += `\nuser: ${chat.prompt}\nresponse: ${chat.response}`;
+      chatStr += `\n{user: ${chat.prompt}\nresponse: ${chat.response}}`;
     });
 
     chatStr += `"""`;
 
     const response = await ai.models.generateContent({
       model: process.env.GEMINI_MODEL,
-      contents: promptText,
+      contents: prompt,
       config: {
         systemInstruction: `Consider the following in the response: ${chatStr}`,
         thinkingConfig: {
@@ -60,7 +60,7 @@ export default class ChatBusinessLogic {
     if(response.text?.length > 0) {
       const newChat = ChatDataService.saveNewChatData({
         chat_thread_id: chatThreadId,
-        prompt: promptText,
+        prompt: prompt,
         response: response.text,
         blob: "",
         response_tokens: response.usageMetadata?.candidatesTokenCount ?? 0,
@@ -71,22 +71,13 @@ export default class ChatBusinessLogic {
       return {
         id: newChat.id,
         chatThreadId: newChat.chat_thread_id,
-        prompt: promptText,
+        prompt: prompt,
         response: response.text,
       };
     }
     else {
       throw new Error("No response text received.");
     }
-  }
-
-  /**
-   * Edits a chat thread with the passed in data.
-   * @param chatThreadId - `string` - UUID of the chat thread to edit.
-   * @param newName - `string` - New name for the chat thread.
-   */
-  static editChatThread({chatThreadId, newName}) {
-    console.log(`$$$ id: ${chatThreadId} | new name: ${newName}`);
   }
 
   /**
