@@ -5,6 +5,7 @@ import chatRouter from "./routes/chat_router.js"
 import cors from "cors"
 
 DotenvFlow.config();
+const hostname = process.env.HOST || "localhost";
 const port = process.env.PORT || 3042;
 
 const app = express();
@@ -20,6 +21,6 @@ app.get('/heartbeat', (req, res) => {
   res.status(200).json({now: date});
 });
 
-app.listen(port, () => {3
-  console.log(`\nServer is running on http://localhost:${port}`);
+app.listen(port, hostname, () => {
+  console.log(`\nServer is running on http://${hostname}:${port}`);
 });
