@@ -21,7 +21,7 @@ export default class ChatBusinessLogic {
 
   /**
    * Deletes a single chat thread with the passed in ID.
-   * @param chatThreadId - string - UUID of the chat thread to delete.
+   * @param chatThreadId - `string` - UUID of the chat thread to delete.
    * @returns Result of the deletion from the database.
    */
   static deleteChatThread(chatThreadId) {
@@ -31,11 +31,11 @@ export default class ChatBusinessLogic {
 
   /**
    * Performs a Gemini one off chat with the passed in prompt.
-   * @param promptText - string - The prompt to send to Gemini.
-   * @param chatThreadId - string - UUID of the associated chat thread.
+   * @param promptText - `string` - The prompt to send to Gemini.
+   * @param chatThreadId - `string` - UUID of the associated chat thread.
    * @returns A response with the response text and role of the chat.
    */
-  static async doChatRequest(promptText, chatThreadId){
+  static async doChatRequest({promptText, chatThreadId}){
 
     let chatThread = ChatDataService.getChatsForThreadById(chatThreadId);
     let chatStr = `"""`;
@@ -82,8 +82,8 @@ export default class ChatBusinessLogic {
 
   /**
    * Edits a chat thread with the passed in data.
-   * @param chatThreadId - string - UUID of the chat thread to edit.
-   * @param newName - string - New name for the chat thread.
+   * @param chatThreadId - `string` - UUID of the chat thread to edit.
+   * @param newName - `string` - New name for the chat thread.
    */
   static editChatThread({chatThreadId, newName}) {
     console.log(`$$$ id: ${chatThreadId} | new name: ${newName}`);
@@ -99,7 +99,7 @@ export default class ChatBusinessLogic {
 
   /**
    * Returns a chat thread from the database by ID.
-   * @param chatThreadId - string - ID of the chat thread to find in the db.
+   * @param chatThreadId - `string` - ID of the chat thread to find in the db.
    * @returns 
    */
   static getChatThreadById(chatThreadId) {
@@ -109,6 +109,7 @@ export default class ChatBusinessLogic {
   /**
    * Updates the chat thread meta data.
    * @param newTitle - string - New title for the chat thread.
+   * @param chatThreadId - `string` - UUID of the chat thread to modify.
    * @returns 
    */
   static updateChatThread({newTitle, chatThreadId}) {

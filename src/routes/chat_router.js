@@ -10,6 +10,7 @@ Requests a one-off chat.
 req.body:
 {
   prompt: string //User's prompt for the AI request.
+  chatThreadId: string //UUID of the chat thread.
 }
 **/
 chatRouter.post('/chat', async (req, res) => {
@@ -21,7 +22,7 @@ chatRouter.post('/chat', async (req, res) => {
       throw new Error("No `chatThreadId` provided.");
     }
 
-    const response = await ChatBusinessLogic.doChatRequest(req.body.prompt, req.body.chatThreadId);
+    const response = await ChatBusinessLogic.doChatRequest(req.body);
 
     res.status(201).json({
       chat: response,
@@ -129,6 +130,12 @@ chatRouter.delete('/chat/thread/:id', async (req, res) => {
 /**
 PATCH /api/gemini/chat/thread/edit
 Updates a Chat Thread's meta data.
+---
+req.body:
+{
+  newTitle: string //New title for the chat thread.
+  chatThreadId: string //UUID of the chat thread to change.
+}
 **/
 chatRouter.patch('/chat/thread/edit', async (req, res) => {
   try {
