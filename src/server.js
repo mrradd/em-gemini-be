@@ -12,7 +12,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-//TODO CH  RENAME TO /chat
 app.use('/api/gemini', chatRouter);
 
 app.get('/heartbeat', (req, res) => {
