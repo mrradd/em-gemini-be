@@ -15,10 +15,10 @@ req.body:
 **/
 chatRouter.post('/chat', async (req, res) => {
   try {
-    if(!req?.body?.prompt) {
+    if (!req?.body?.prompt) {
       throw new Error("No `prompt` provided.");
     }
-    if(!req?.body?.chatThreadId) {
+    if (!req?.body?.chatThreadId) {
       throw new Error("No `chatThreadId` provided.");
     }
 
@@ -28,14 +28,14 @@ chatRouter.post('/chat', async (req, res) => {
       chat: response,
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: POST /api/gemini/chat: ${error.message}`);
     res.sendStatus(500);
   }
 });
 
 /**
-GET /api/gemini/all
+GET /api/gemini/chat/all
 Requests all chats from the database.
 **/
 chatRouter.get('/chat/all', async (req, res) => {
@@ -46,7 +46,7 @@ chatRouter.get('/chat/all', async (req, res) => {
       chats: response
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: POST /api/gemini/chat/all: ${error.message}`);
     res.sendStatus(500);
   }
@@ -67,7 +67,7 @@ chatRouter.post('/chat/thread/new', async (req, res) => {
       chatThread: response,
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: POST /api/gemini/chat/thread/new: ${error.message}`);
     res.sendStatus(500);
   }
@@ -85,7 +85,7 @@ chatRouter.get('/chat/thread/all', async (req, res) => {
       threads: response,
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: POST /api/gemini/chat/thread/all: ${error.message}`);
     res.sendStatus(500);
   }
@@ -103,7 +103,7 @@ chatRouter.get('/chat/thread/:id', async (req, res) => {
       thread: response,
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: GET /api/gemini/chat/thread/:id: ${error.message}`);
     res.sendStatus(500);
   }
@@ -121,7 +121,7 @@ chatRouter.delete('/chat/thread/:id', async (req, res) => {
       result: response,
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: DELETE /api/gemini/chat/thread/:id: ${error.message}`);
     res.sendStatus(500);
   }
@@ -139,15 +139,15 @@ req.body:
 **/
 chatRouter.patch('/chat/thread/edit', async (req, res) => {
   try {
-    if(req.body == null) {
+    if (req.body == null) {
       throw new Error("No body given.")
     }
-    
+
     const response = await ChatBusinessLogic.updateChatThread(req.body);
 
     res.status(200).json(response);
   }
-  catch (error){
+  catch (error) {
     console.log(`ERROR: PATCH api/gemini/chat/thread/edit: ${error.message}`);
     res.sendStatus(500);
   }
