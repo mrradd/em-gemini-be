@@ -4,7 +4,7 @@ import { TheDB } from "./db.js";
 import { migration_1 } from "./migrations/migration_1.js";
 
 //Key = migration name. Value = migration object to use.
-const migrationDictionary = {
+export const migrationDictionary = {
   "migration_1": migration_1,
 }
 
@@ -34,7 +34,7 @@ const updateDb = async () => {
     }
   });
 
-  console.log("YAY!");
+  console.log("Finished updating the database!");
   process.exit(0);
 }
 
@@ -42,7 +42,7 @@ const updateDb = async () => {
  * Get all the Migration version numbers to determine what migrations need to be run.
  */
 const getMigrationVersionNumbers = () => {
-  console.log("getMigrationNumbers | start");
+  console.log("getMigrationVersionNumbers | start");
   const versionNumberQuery = TheDB.prepare("SELECT version_number FROM migrations ORDER BY version_number ASC;");
   const versionNumberData = versionNumberQuery.all();
   const versionNumbers = [];
@@ -52,7 +52,7 @@ const getMigrationVersionNumbers = () => {
   });
 
   console.log(versionNumbers);
-  console.log("getMigrationNumbers | end");
+  console.log("getMigrationVersionNumbers | end");
   return versionNumbers;
 }
 
